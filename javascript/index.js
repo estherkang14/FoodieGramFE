@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         userLi.addEventListener('click', (e) => {
             if(e.target.innerText === user.username){
                 rendersUser(user)
-                console.log(e.target)
+                // console.log(e.target)
             }
             
         })
@@ -43,11 +43,54 @@ document.addEventListener("DOMContentLoaded", () => {
     // })
     const rendersUser = (user) => {
         const profileInfoDiv = document.getElementById("profile-info")
+        removeAllDivChildren(profileInfoDiv)
         
         const userName = document.createElement("h3")
         userName.innerText = user.username
         profileInfoDiv.appendChild(userName)
+
+        const userProfilePic = document.createElement("img")
+        userProfilePic.src = user.profilepic 
+        profileInfoDiv.appendChild(userProfilePic)
+
+        const userBio = document.createElement("p")
+        userBio.textContent = user.bio 
+        profileInfoDiv.appendChild(userBio)
+
+        const main = document.getElementById('profile-post')
+        removeAllPosts(main)
+
+        const usersPosts = user.posts 
+        renderPosts(usersPosts, main, user)
     }
+
+    const renderPosts = (usersPosts, main, user) => {
+        usersPosts.forEach(post => renderPost(post, main, user))
+    }
+
+    const renderPost = (post, main, user) => {
+        const postDiv = document.createElement('div')
+        main.appendChild(postDiv)
+        postDiv.classList += 'card'
+        const image = document.createElement('img')
+        image.src = post.image_url
+        postDiv.appendChild(image)
+        console.log(post)
+    }
+
+    const removeAllDivChildren = (profileInfoDiv) => {
+        while (profileInfoDiv.firstChild) {
+            profileInfoDiv.removeChild(profileInfoDiv.firstChild)
+        }
+    }
+
+    const removeAllPosts = (main) => {
+        while (main.firstChild) {
+            main.removeChild(main.firstChild)
+        }
+    }
+
+    
 
     getUserApi()
 })

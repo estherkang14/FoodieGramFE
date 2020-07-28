@@ -14,6 +14,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const rendersUsers = (users) => {
         users.forEach(user => renderUserList(user))
+        
+        const userLoginForm = document.getElementById("login-form")
+        const loginTextField = document.getElementById("username-field")
+        console.log(users)
+        userLoginForm.addEventListener('submit', (e) => {
+            
+        })
+        console.log(userLoginForm)
     }
 
     const renderUserList = (user) => {
@@ -30,6 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             
         })
+        // const userLoginForm = document.getElementById("login-form")
+        // console.log(userLoginForm)
         
     }
 
@@ -94,3 +104,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     getUserApi()
 })
+
+
+// const curUser = 
+
+// const text = document.getElementById("username input")
+
+// Form.addEventListener('submit', (e) => {
+//     if(text.value === user.username){
+//         curUser = user.id
+//     }
+
+// })
+

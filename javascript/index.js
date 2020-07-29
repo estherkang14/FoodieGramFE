@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(res => res.json())
         .then(users => rendersUsers(users))
     }
-    console.log(userUrl)
 
     const rendersUsers = (users) => {
         
@@ -37,12 +36,69 @@ document.addEventListener("DOMContentLoaded", () => {
                     logo.addEventListener('click', (e) => {
                         fetchFeed()
                     })
+                    
+                    const topBar = document.getElementById('top-info')
+                    const addPostBtn = document.createElement('button')
+                    addPostBtn.innerText = "Add a Post"
+                    addPostBtn.classList += "trigger"
+                    
+                    topBar.appendChild(addPostBtn)
+                    const modalDiv = document.createElement('div')
+                    modalDiv.classList += "modal"
+                    topBar.appendChild(modalDiv)
+
+                    const modalContent = document.createElement('div')
+                    modalContent.classList += "modal-content"
+                    modalDiv.appendChild(modalContent)
+
+                    const modalSpan = document.createElement('span')
+                    modalSpan.classList += "close-button"
+                    modalSpan.innerHTML = "&times;"
+                    modalContent.appendChild(modalSpan)
+
+                    const signUpText = document.createElement('form')
+                    modalContent.appendChild(signUpText)
+
+                    const imageUrlInput = document.createElement('input')
+                    imageUrlInput.type = 'text'
+                    imageUrlInput.placeholder = 'Image URL Here'
+                    signUpText.appendChild(imageUrlInput)
+
+                    const captionInput = document.createElement('input')
+                    captionInput.type = 'textField'
+                    captionInput.placeholder = "Write a Caption"
+                    signUpText.appendChild(captionInput)
+
+                    const submitPostBtn = document.createElement('input')
+                    submitPostBtn.type = 'submit'
+                    submitPostBtn.innerText = "Post"
+                    signUpText.appendChild(submitPostBtn)
+
+                    signUpText.addEventListener('submit', (e) => {
+                        e.preventDefault()
+                        postAPost(user, imageUrlInput, captionInput)
+                    
+                    })
+
+                    function toggleModal() {
+                        modalDiv.classList.toggle("show-modal");
+                    }
+                
+                    function windowOnClick(event) {
+                        if (event.target === modalDiv) {
+                            toggleModal();
+                        }
+                    }
+                    
+                    addPostBtn.addEventListener("click", toggleModal);
+                    modalSpan.addEventListener("click", toggleModal);
+                    window.addEventListener("click", windowOnClick);
                 }
             })
         })
-        // console.log(userLoginForm)
     }
 
+    
     const fetchFeed = () => {
         fetch(postUrl)
         .then(res => res.json())
@@ -89,9 +145,34 @@ document.addEventListener("DOMContentLoaded", () => {
         img.src= post.image_url
         div.appendChild(img)
 
+        const likes = document.createElement('p')
+        if(post.likes){
+            likes.innerHTML = `${post.likes.length} Like(s)`
+            div.appendChild(likes)
+        } else {
+            likes.innerHTML = "0 likes"
+            div.appendChild(likes)
+        }
+
         const caption = document.createElement('p')
         caption.textContent = post.caption
         div.appendChild(caption)
+
+        const commentDiv = document.createElement('div')
+        div.appendChild(commentDiv)
+        const commentList = document.createElement('ul')
+        commentDiv.appendChild(commentList)
+        if(post.comments){
+            post.comments.forEach(comment => {
+                const commentli = document.createElement('li')
+                commentli.innerText = comment.text
+                commentList.appendChild(commentli)
+            })
+        }
+        
+
+
+        
 
 
     }
@@ -171,6 +252,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const usersPosts = user.posts 
         renderPosts(usersPosts, main, user)
+
+        main.addEventListener("click", (e) => {
+            console.log(e.target.parentNode)
+            if(e.target.parentNode.className === "card"){
+                const x = e.target
+                postPage(x)
+            }
+        })
     }
 
     const renderPosts = (usersPosts, main, user) => {
@@ -183,6 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
         postDiv.classList += 'card'
         const image = document.createElement('img')
         image.src = post.image_url
+        image.dataset.id = post.id
         postDiv.appendChild(image)
         console.log(post)
     }
@@ -199,26 +289,34 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    
+    const postAPost = (user, imageUrlInput, captionInput) => {
+        fetch(postUrl,{
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+                Accepts: "application/json"
+            },
+            body: JSON.stringify({
+                image_url: imageUrlInput.value,
+                caption: captionInput.value,
+                user_id: user.id
+            })
+        })
+        .then(res => res.json())
+        .then(post => postShowPage(post))
+        
+        
+    }
+
 
     getUserApi()
 })
 
+
 // Comeback to this
-// fetch(userUrl,{
-                    //     method: "POST",
-                    //     headers: {
-                    //         "Content-type": "application/json",
-                    //         Accepts: "application/json"
-                    //     },
-                    //     body: JSON.stringify({
-                    //         username: usernameTextField.value,
-                    //         bio: bioTextField.value,
-                    //         profilepic: imageUrlField.value
-                    //     })
-                // })
 
 
-                //step1 find and the post add a click event
-                //step2 get the post info
-                //step3 then display on screen
+
+//step1 find and the post add a click event
+//step2 get the post info
+//step3 then display on screen

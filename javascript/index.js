@@ -30,17 +30,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     removeUserListChildren(userList)
 
                     users.forEach(user => renderUserList(user, userList))
-                    console.log(user)
-                    console.log("my id is:", currentUser) 
 
                     fetchFeed(user)
+
+                    const logo = document.getElementById("app-name")
+                    logo.addEventListener('click', (e) => {
+                        fetchFeed()
+                    })
                 }
             })
         })
-        console.log(userLoginForm)
+        // console.log(userLoginForm)
     }
 
-    const fetchFeed = (user) => {
+    const fetchFeed = () => {
         fetch(postUrl)
         .then(res => res.json())
         .then(posts => showFeed(posts))
@@ -59,22 +62,54 @@ document.addEventListener("DOMContentLoaded", () => {
         feedDiv.appendChild(feedList)
 
         posts.forEach(post => showAllPosts(post, showPanel, feedList))
-    }
 
+        console.log(feedDiv)
+        feedDiv.addEventListener("click", (e) => {
+            if(e.target.className === "whatever"){
+                const x = e.target
+                postPage(x)
+            }
+        })
+    }
+    const postPage = (x) => {
+        console.log(x.dataset.id)
+        fetch(`${postUrl}/${x.dataset.id}`)
+        .then(res => res.json())
+        .then(post => postShowPage(post))
+    }
+    const postShowPage = (post) => {
+        const showPanel = document.getElementById("show-panel")
+        removeShowPanelChildren(showPanel)
+
+        const div = document.createElement('div')
+        div.id = "post-show-page"
+        showPanel.appendChild(div)
+
+        const img = document.createElement('img')
+        img.src= post.image_url
+        div.appendChild(img)
+
+        const caption = document.createElement('p')
+        caption.textContent = post.caption
+        div.appendChild(caption)
+
+
+    }
     const showAllPosts = (post, showPanel, feedList) => {
-        console.log(post)
         const li = document.createElement('li')
         li.dataset.id = post.id
         feedList.appendChild(li)
 
         const img = document.createElement('img')
         img.src = post.image_url
+        img.dataset.id = post.id
+        img.className = "whatever"
         li.appendChild(img)
     }
 
-    const renderSignUP = (loginTextField) => {
-        console.log(loginTextField)
-    }
+    // const renderSignUP = (loginTextField) => {
+    //     console.log(loginTextField)
+    // }
 
     const renderUserList = (user, userList) => {
 
@@ -183,3 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     //     })
                 // })
 
+
+                //step1 find and the post add a click event
+                //step2 get the post info
+                //step3 then display on screen

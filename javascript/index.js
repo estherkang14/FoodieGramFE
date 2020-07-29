@@ -3,23 +3,34 @@ const userUrl = baseUrl + "users"
 const postUrl = baseUrl + "posts"
 const commentsUrl = baseUrl + "comments"
 const likesUrl = baseUrl + "likes"
+let currentUser = 
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log(userUrl)
     const getUserApi = () => {
         fetch(userUrl)
         .then(res => res.json())
         .then(users => rendersUsers(users))
     }
+    console.log(userUrl)
 
     const rendersUsers = (users) => {
         users.forEach(user => renderUserList(user))
         
         const userLoginForm = document.getElementById("login-form")
         const loginTextField = document.getElementById("username-field")
-        console.log(users)
         userLoginForm.addEventListener('submit', (e) => {
-            
+            e.preventDefault()
+            // console.log("this is1", loginTextField.value)
+
+            users.forEach(element => {
+                // console.log(element.username)
+                // console.log(loginTextField.value)
+                if(element.username === loginTextField.value){
+                    currentUser = element.id
+                    
+                    // console.log("my id is:", currentUser) Show esther
+                }
+            })
         })
         console.log(userLoginForm)
     }

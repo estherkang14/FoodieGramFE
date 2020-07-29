@@ -14,25 +14,37 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(userUrl)
 
     const rendersUsers = (users) => {
-        users.forEach(user => renderUserList(user))
         
         const userLoginForm = document.getElementById("login-form")
         const loginTextField = document.getElementById("username-field")
         userLoginForm.addEventListener('submit', (e) => {
             e.preventDefault()
             // console.log("this is1", loginTextField.value)
-
-            users.forEach(element => {
+            
+            users.forEach(user => {
                 // console.log(element.username)
                 // console.log(loginTextField.value)
-                if(element.username === loginTextField.value){
-                    currentUser = element.id
-                    
-                    // console.log("my id is:", currentUser) Show esther
+                if(user.username === loginTextField.value){
+                    currentUser = user.id
+                    users.forEach(user => renderUserList(user))
+                    console.log(user)
+                    console.log("my id is:", currentUser) 
+
+                    fetchFeed(user)
                 }
             })
         })
         console.log(userLoginForm)
+    }
+
+    const fetchFeed = (user) => {
+        fetch(postUrl)
+        .then(res => res.json())
+        .then(posts => (posts))
+    }
+
+    const renderSignUP = (loginTextField) => {
+        console.log(loginTextField)
     }
 
     const renderUserList = (user) => {
@@ -116,15 +128,17 @@ document.addEventListener("DOMContentLoaded", () => {
     getUserApi()
 })
 
-
-// const curUser = 
-
-// const text = document.getElementById("username input")
-
-// Form.addEventListener('submit', (e) => {
-//     if(text.value === user.username){
-//         curUser = user.id
-//     }
-
-// })
+// Comeback to this
+// fetch(userUrl,{
+                    //     method: "POST",
+                    //     headers: {
+                    //         "Content-type": "application/json",
+                    //         Accepts: "application/json"
+                    //     },
+                    //     body: JSON.stringify({
+                    //         username: usernameTextField.value,
+                    //         bio: bioTextField.value,
+                    //         profilepic: imageUrlField.value
+                    //     })
+                // })
 

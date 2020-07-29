@@ -26,7 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 // console.log(loginTextField.value)
                 if(user.username === loginTextField.value){
                     currentUser = user.id
-                    users.forEach(user => renderUserList(user))
+                    const userList = document.getElementById("user-list")
+                    removeUserListChildren(userList)
+
+                    users.forEach(user => renderUserList(user, userList))
                     console.log(user)
                     console.log("my id is:", currentUser) 
 
@@ -40,15 +43,41 @@ document.addEventListener("DOMContentLoaded", () => {
     const fetchFeed = (user) => {
         fetch(postUrl)
         .then(res => res.json())
-        .then(posts => (posts))
+        .then(posts => showFeed(posts))
+    }
+
+    const showFeed = (posts) => {
+        const showPanel = document.getElementById('show-panel')
+        removeShowPanelChildren(showPanel)
+
+        const feedDiv = document.createElement('div')
+        feedDiv.id = 'feed-div'
+        showPanel.appendChild(feedDiv)
+
+        const feedList = document.createElement('list')
+        feedList.li = 'all-posts-list'
+        feedDiv.appendChild(feedList)
+
+        posts.forEach(post => showAllPosts(post, showPanel, feedList))
+    }
+
+    const showAllPosts = (post, showPanel, feedList) => {
+        console.log(post)
+        const li = document.createElement('li')
+        li.dataset.id = post.id
+        feedList.appendChild(li)
+
+        const img = document.createElement('img')
+        img.src = post.image_url
+        li.appendChild(img)
     }
 
     const renderSignUP = (loginTextField) => {
         console.log(loginTextField)
     }
 
-    const renderUserList = (user) => {
-        const userList = document.getElementById("user-list")
+    const renderUserList = (user, userList) => {
+
         const userLi = document.createElement("li")
         userList.appendChild(userLi)
         userLi.innerText = user.username
@@ -66,6 +95,12 @@ document.addEventListener("DOMContentLoaded", () => {
         
     }
 
+    const removeUserListChildren = (userList) => {
+        while (userList.firstChild) {
+            userList.removeChild(userList.firstChild)
+        }
+    }
+
     const sideNavBarDiv = document.getElementById("side-nav-bar")
 
     // sideNavBarDiv.addEventListener('click', (e) => {
@@ -75,8 +110,12 @@ document.addEventListener("DOMContentLoaded", () => {
     //     }
     // })
     const rendersUser = (user) => {
-        const profileInfoDiv = document.getElementById("profile-info")
-        removeAllDivChildren(profileInfoDiv)
+        const showPanel = document.getElementById('show-panel')
+        removeShowPanelChildren(showPanel)
+
+        const profileInfoDiv = document.createElement('div')
+        profileInfoDiv.id = 'profile-info'
+        showPanel.appendChild(profileInfoDiv)
         
         const userName = document.createElement("h3")
         userName.innerText = user.username
@@ -90,7 +129,9 @@ document.addEventListener("DOMContentLoaded", () => {
         userBio.textContent = user.bio 
         profileInfoDiv.appendChild(userBio)
 
-        const main = document.getElementById('profile-post')
+        const main = document.createElement("main")
+        main.id = 'profile-post'
+        showPanel.appendChild(main)
         removeAllPosts(main)
 
         const usersPosts = user.posts 
@@ -111,9 +152,9 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(post)
     }
 
-    const removeAllDivChildren = (profileInfoDiv) => {
-        while (profileInfoDiv.firstChild) {
-            profileInfoDiv.removeChild(profileInfoDiv.firstChild)
+    const removeShowPanelChildren = (showPanel) => {
+        while (showPanel.firstChild) {
+            showPanel.removeChild(showPanel.firstChild)
         }
     }
 

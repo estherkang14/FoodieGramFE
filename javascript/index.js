@@ -3,16 +3,21 @@ const userUrl = baseUrl + "users"
 const postUrl = baseUrl + "posts"
 const commentsUrl = baseUrl + "comments"
 const likesUrl = baseUrl + "likes"
-let currentUser = 
+let allUsers 
+let currentUser 
 
 document.addEventListener("DOMContentLoaded", () => {
     const getUserApi = () => {
         fetch(userUrl)
         .then(res => res.json())
-        .then(users => rendersUsers(users))
+        .then(users => {
+            allUsers = users
+            rendersUsers()
+            
+        })
     }
 
-    const rendersUsers = (users) => {
+    const rendersUsers = () => {
         
         const userLoginForm = document.getElementById("login-form")
         const loginTextField = document.getElementById("username-field")
@@ -20,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault()
             // console.log("this is1", loginTextField.value)
             
-            users.forEach(user => {
+            allUsers.forEach(user => {
                 // console.log(element.username)
                 // console.log(loginTextField.value)
                 if(user.username === loginTextField.value){
@@ -28,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const userList = document.getElementById("user-list")
                     removeUserListChildren(userList)
 
-                    users.forEach(user => renderUserList(user, userList))
+                    allUsers.forEach(user => renderUserList(user, userList))
 
                     fetchFeed(user)
 
@@ -153,6 +158,17 @@ document.addEventListener("DOMContentLoaded", () => {
             likes.innerHTML = "0 likes"
             div.appendChild(likes)
         }
+        
+        // if(post.id === currentUser){
+        //     const deleteButton = document.createElement('button')
+        //     deleteButton.innerText = "delete post"
+        //     div.appendChild(deleteButton)
+
+        //     deleteButton.addEventListener('click', (e) =>{
+        //         fetch(`${postUrl}/${post.id}`,{method: "DELETE"})
+        //         .then()
+        //     })
+        // }
 
         const caption = document.createElement('p')
         caption.textContent = post.caption
@@ -320,3 +336,5 @@ document.addEventListener("DOMContentLoaded", () => {
 //step1 find and the post add a click event
 //step2 get the post info
 //step3 then display on screen
+
+

@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const logincheck = () =>{
         allUsers.forEach(user => {
             if(user.username === loginTextField.value){
-                currentUser = user.id
+                currentUser = user
                 removeUserListChildren(userList)
                 fetchFeed()
 
@@ -86,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 addPostForm.addEventListener('submit', (e) => {
                     e.preventDefault()
                     postAPost(user, imageUrlInput, captionInput)
-                
                 })
 
                 function toggleModal() {
@@ -150,6 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const div = document.createElement('div')
         div.id = "post-show-page"
+        div.name = "delete-me"
         showPanel.appendChild(div)
 
         const img = document.createElement('img')
@@ -164,15 +164,18 @@ document.addEventListener("DOMContentLoaded", () => {
             likes.innerHTML = "0 likes"
             div.appendChild(likes)
         }
-        
-        // if(post.id === currentUser){
+
+
+        // if(post.user.id === currentUser.id){
+        //     console.log("hey")
         //     const deleteButton = document.createElement('button')
         //     deleteButton.innerText = "delete post"
         //     div.appendChild(deleteButton)
 
         //     deleteButton.addEventListener('click', (e) =>{
         //         fetch(`${postUrl}/${post.id}`,{method: "DELETE"})
-        //         .then()
+        //         .then(res => res.json())
+        //         .then(post => )
         //     })
         // }
 
@@ -187,11 +190,23 @@ document.addEventListener("DOMContentLoaded", () => {
         if(post.comments){
             post.comments.forEach(comment => {
                 const commentli = document.createElement('li')
-                commentli.innerText = comment.text
+                commentli.innerHTML = `${comment.text} - <span class='btn-danger'> &times </span>`
+                commentli.id = comment.id
                 commentList.appendChild(commentli)
             })
         }
-        
+        commentDiv.addEventListener('click', (e) => {
+            if(e.target.className === 'btn-danger') {
+                let commentLi = e.target.parentNode
+                deleteComment(commentLi) 
+                console.log(commentId)
+            }
+        })
+        const deleteComment = (commentLi) => {
+            fetch(`${commentsUrl}/${commentLi.id}`,{method: "DELETE"})
+            .then(res => res.json())
+            .then(commentLi.remove())
+        }
     }
     const showAllPosts = (post, showPanel, feedList) => {
         const li = document.createElement('li')
@@ -305,18 +320,15 @@ document.addEventListener("DOMContentLoaded", () => {
             body: JSON.stringify({
                 image_url: imageUrlInput.value,
                 caption: captionInput.value,
-                user_id: user.id
+                user_id: currentUser.id
             })
         })
         .then(res => res.json())
-        .then(post => postShowPage(post))
-        
-        const updateRenderedList = () => {
-            //step1 make that somehow (make a post)
-            //step2 find the user for the post
-            //step3 compare the all users array vs the user we just found
-            //step4 take the match and update it;s info
-        }
+        .then(post => {
+            user.posts.push(post)
+            console.log(user.posts)
+            rendersUser(user)
+        })
     }
 
 

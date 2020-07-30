@@ -45,6 +45,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 logo.addEventListener('click', (e) => {
                     fetchFeed()
                 })
+
+                const profileButton = document.getElementById("profile-button")
+                profileButton.addEventListener('click', (e) => {
+                    rendersUser(currentUser)
+                })
                 // look to line 45 for lines 51 to 106
                 const topBar = document.getElementById('top-info')
                 const addPostBtn = document.createElement('button')
@@ -130,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         posts.forEach(post => showAllPosts(post, showPanel, feedList))
 
-        console.log(feedDiv)
+        
         feedDiv.addEventListener("click", (e) => {
             if(e.target.className === "post-img"){
                 const postImg = e.target
@@ -139,6 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     }
     const postPage = (postImg) => {
+        console.log(postImg)
         fetch(`${postUrl}/${postImg.dataset.id}`)
         .then(res => res.json())
         .then(post => postShowPage(post))
@@ -157,12 +163,39 @@ document.addEventListener("DOMContentLoaded", () => {
         div.appendChild(img)
 
         const likes = document.createElement('p')
+        likes.dataset.id = post.id 
         if(post.likes){
-            likes.innerHTML = `${post.likes.length} Like(s)`
+            likes.innerHTML = `<span class="like-count">${post.likes.length}</span> Like(s) - <span class="like-button">&hearts;</span>`
             div.appendChild(likes)
+
         } else {
-            likes.innerHTML = "0 likes"
+            likes.innerHTML = "<span class='like-count'>0</span> Likes - <span class='like-button'>&hearts;</span>"
             div.appendChild(likes)
+        }
+
+        const likeButton = document.querySelector("span.like-button")
+        likeButton.addEventListener('click', (e) => {
+            e.preventDefault()
+            fetch(likesUrl, {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                    Accepts: "application/json"
+                },
+                body: JSON.stringify({
+                    post_id: post.id,
+                    user_id: currentUser.id
+                })
+            })
+            .then(resp => resp.json())
+            .then(incrementLikes(post,likes))
+        })
+
+        const incrementLikes = (post, likes) => {
+        
+            fetch(`${postUrl}/${likes.dataset.id}`)
+            .then(resp => resp.json())
+            .then(postPage(likes))
         }
 
 
@@ -189,24 +222,79 @@ document.addEventListener("DOMContentLoaded", () => {
         commentDiv.appendChild(commentList)
         if(post.comments){
             post.comments.forEach(comment => {
+                console.log(comment)
+                debugger
                 const commentli = document.createElement('li')
-                commentli.innerHTML = `${comment.text} - <span class='btn-danger'> &times </span>`
+                commentli.innerHTML = ` - ${comment.text} - <span class='btn-danger'> &times </span>`
                 commentli.id = comment.id
                 commentList.appendChild(commentli)
             })
         }
+        const addCommentButton = document.createElement('button')
+        addCommentButton.innerText = "Add a Comment!"
+        addCommentButton.id = 'add-comment'
+        commentDiv.appendChild(addCommentButton)
+
         commentDiv.addEventListener('click', (e) => {
             if(e.target.className === 'btn-danger') {
                 let commentLi = e.target.parentNode
                 deleteComment(commentLi) 
-                console.log(commentId)
+            } else if (e.target.id === 'add-comment') {
+                addCommentButton.innerText = "Hide Comment Form"
+                addCommentButton.id = 'hide-comment-form'
+                const newCommentForm = document.createElement('form')
+                newCommentForm.innerText = "test"
+                newCommentForm.dataset.id = post.id
+                newCommentForm.id = 'new-comment-form'
+                commentDiv.appendChild(newCommentForm)
+
+                newCommentForm.innerHTML = `
+                    <label>Comment: </label>
+                    <br>
+                    <input type="text" name="text">
+                    <br>
+                    <input type="submit" value="Add Comment">
+                `
+                newCommentForm.addEventListener('submit', (e) => {
+                    e.preventDefault()
+                    let commentForm = e.target
+                    fetch(commentsUrl, {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json',
+                            'accept': 'application/json'
+                        },
+                        body: JSON.stringify( {
+                            text: commentForm.text.value,
+                            user_id: currentUser.id,
+                            post_id: post.id
+                        })
+                    })
+                    .then(resp => resp.json())
+                    .then(showNewComment(newCommentForm))
+                })
+                
+            } else if (e.target.id === 'hide-comment-form') {
+                addCommentButton.innerText = "Add a Comment!"
+                addCommentButton.id = 'add-comment'
+                let newCommentFormHide = document.getElementById('new-comment-form') 
+                commentDiv.removeChild(newCommentFormHide)
             }
+
+
         })
+
+        const showNewComment = (newCommentForm) => {
+            fetch(`${postUrl}/${newCommentForm.dataset.id}`)
+            .then(resp => resp.json())
+            .then(postPage(newCommentForm))
+    }
         const deleteComment = (commentLi) => {
             fetch(`${commentsUrl}/${commentLi.id}`,{method: "DELETE"})
             .then(res => res.json())
             .then(commentLi.remove())
         }
+    
     }
     const showAllPosts = (post, showPanel, feedList) => {
         const li = document.createElement('li')
@@ -275,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderPosts(usersPosts, main, user)
 
         main.addEventListener("click", (e) => {
-            console.log(e.target.parentNode)
+            
             if(e.target.parentNode.className === "card"){
                 const x = e.target
                 postPage(x)
@@ -295,7 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
         image.src = post.image_url
         image.dataset.id = post.id
         postDiv.appendChild(image)
-        console.log(post)
+        
     }
 
     const removeShowPanelChildren = (showPanel) => {

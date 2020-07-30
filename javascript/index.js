@@ -5,6 +5,7 @@ const commentsUrl = baseUrl + "comments"
 const likesUrl = baseUrl + "likes"
 let allUsers 
 let currentUser 
+let allUsersUserName = []
 
 document.addEventListener("DOMContentLoaded", () => {
     const userLoginForm = document.getElementById("login-form")
@@ -17,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(res => res.json())
         .then(users => {
             allUsers = users
+            allUsers.forEach(user => allUsersUserName.push(user.username))
             rendersUsers()
             
         })
@@ -35,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     const logincheck = () =>{
+        
         allUsers.forEach(user => {
             if(user.username === loginTextField.value){
                 currentUser = user
@@ -45,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 logo.addEventListener('click', (e) => {
                     fetchFeed()
                 })
-
+                
                 const profileButton = document.getElementById("profile-button")
                 profileButton.addEventListener('click', (e) => {
                     rendersUser(currentUser)
@@ -60,29 +63,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 const modalDiv = document.createElement('div')
                 modalDiv.classList += "modal"
                 topBar.appendChild(modalDiv)
-
+                
                 const modalContent = document.createElement('div')
                 modalContent.classList += "modal-content"
                 modalDiv.appendChild(modalContent)
-
+                
                 const modalSpan = document.createElement('span')
                 modalSpan.classList += "close-button"
                 modalSpan.innerHTML = "&times;"
                 modalContent.appendChild(modalSpan)
-
+                
                 const addPostForm = document.createElement('form')
                 modalContent.appendChild(addPostForm)
-
+                
                 const imageUrlInput = document.createElement('input')
                 imageUrlInput.type = 'text'
                 imageUrlInput.placeholder = 'Image URL Here'
                 addPostForm.appendChild(imageUrlInput)
-
+                
                 const captionInput = document.createElement('input')
                 captionInput.type = 'textField'
                 captionInput.placeholder = "Write a Caption"
                 addPostForm.appendChild(captionInput)
-
+                
+                
                 const submitPostBtn = document.createElement('input')
                 submitPostBtn.type = 'submit'
                 submitPostBtn.innerText = "Post"
@@ -92,11 +96,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     e.preventDefault()
                     postAPost(user, imageUrlInput, captionInput)
                 })
-
+                
                 function toggleModal() {
                     modalDiv.classList.toggle("show-modal");
                 }
-            
+                
                 function windowOnClick(event) {
                     if (event.target === modalDiv) {
                         toggleModal();
@@ -106,9 +110,63 @@ document.addEventListener("DOMContentLoaded", () => {
                 addPostBtn.addEventListener("click", toggleModal);
                 modalSpan.addEventListener("click", toggleModal);
                 window.addEventListener("click", windowOnClick);
-            }
+            } 
         })
     }  
+    
+    const signUp  = () => {
+        const signUpBtn = document.getElementById('sign-up')
+        const upperBar = document.getElementById('top-nav-bar')
+        
+        const mainHolder = document.createElement('div')
+        mainHolder.classList += 'modal'
+        upperBar.appendChild(mainHolder)
+        
+        const formHolder = document.createElement('div')
+        formHolder.classList += 'modal-content'
+        mainHolder.appendChild(formHolder)
+        
+        const newUserForm = document.createElement('form')
+        newUserForm.id = 'sign-up-form'
+        formHolder.appendChild(newUserForm)
+        
+        const newName = document.createElement('input')
+        newName.type='text'
+        newName.placeholder='Username Here'
+        newName.id = 'signUp-name'
+        newUserForm.appendChild(newName)
+        
+        const newBio = document.createElement('input')
+        newBio.type='textfield'
+        newBio.placeholder='Tell us about yourself'
+        newBio.id = 'signUp-bio'
+        newUserForm.appendChild(newBio)
+        
+        const newSubmit = document.createElement('input')
+        newSubmit.type='submit'
+        newSubmit.value='Create Account'
+        newSubmit.id ='signUp-submit'
+        newUserForm.appendChild(newSubmit)
+        
+        const signUpSpan = document.createElement('span')
+        signUpSpan.classList += "close-button"
+        signUpSpan.innerHTML = "&times;"
+        formHolder.appendChild(signUpSpan)
+        
+        function toggleModal() {
+            mainHolder.classList.toggle("show-modal");
+        }
+            
+            function windowOnClick(event) {
+                if (event.target === mainHolder) {
+                    toggleModal();
+                }
+            }
+            signUpBtn.addEventListener("click", toggleModal);
+            signUpSpan.addEventListener("click", toggleModal);
+            window.addEventListener("click", windowOnClick);
+    }
+    signUp()
     
     const fetchFeed = () => {
         fetch(postUrl)

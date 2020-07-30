@@ -7,6 +7,11 @@ let allUsers
 let currentUser 
 
 document.addEventListener("DOMContentLoaded", () => {
+    const userLoginForm = document.getElementById("login-form")
+    const loginTextField = document.getElementById("username-field")
+    const userList = document.getElementById("user-list")
+    
+    //Get and set the allUsers var
     const getUserApi = () => {
         fetch(userUrl)
         .then(res => res.json())
@@ -16,93 +21,90 @@ document.addEventListener("DOMContentLoaded", () => {
             
         })
     }
-
+    //renders the side panel userlist
     const rendersUsers = () => {
-        
-        const userLoginForm = document.getElementById("login-form")
-        const loginTextField = document.getElementById("username-field")
+        //probably can be put in it's many other functions
         userLoginForm.addEventListener('submit', (e) => {
             e.preventDefault()
-            // console.log("this is1", loginTextField.value)
-            
-            allUsers.forEach(user => {
-                // console.log(element.username)
-                // console.log(loginTextField.value)
-                if(user.username === loginTextField.value){
-                    currentUser = user.id
-                    const userList = document.getElementById("user-list")
-                    removeUserListChildren(userList)
-
-                    allUsers.forEach(user => renderUserList(user, userList))
-
-                    fetchFeed(user)
-
-                    const logo = document.getElementById("app-name")
-                    logo.addEventListener('click', (e) => {
-                        fetchFeed()
-                    })
-                    
-                    const topBar = document.getElementById('top-info')
-                    const addPostBtn = document.createElement('button')
-                    addPostBtn.innerText = "Add a Post"
-                    addPostBtn.classList += "trigger"
-                    
-                    topBar.appendChild(addPostBtn)
-                    const modalDiv = document.createElement('div')
-                    modalDiv.classList += "modal"
-                    topBar.appendChild(modalDiv)
-
-                    const modalContent = document.createElement('div')
-                    modalContent.classList += "modal-content"
-                    modalDiv.appendChild(modalContent)
-
-                    const modalSpan = document.createElement('span')
-                    modalSpan.classList += "close-button"
-                    modalSpan.innerHTML = "&times;"
-                    modalContent.appendChild(modalSpan)
-
-                    const signUpText = document.createElement('form')
-                    modalContent.appendChild(signUpText)
-
-                    const imageUrlInput = document.createElement('input')
-                    imageUrlInput.type = 'text'
-                    imageUrlInput.placeholder = 'Image URL Here'
-                    signUpText.appendChild(imageUrlInput)
-
-                    const captionInput = document.createElement('input')
-                    captionInput.type = 'textField'
-                    captionInput.placeholder = "Write a Caption"
-                    signUpText.appendChild(captionInput)
-
-                    const submitPostBtn = document.createElement('input')
-                    submitPostBtn.type = 'submit'
-                    submitPostBtn.innerText = "Post"
-                    signUpText.appendChild(submitPostBtn)
-
-                    signUpText.addEventListener('submit', (e) => {
-                        e.preventDefault()
-                        postAPost(user, imageUrlInput, captionInput)
-                    
-                    })
-
-                    function toggleModal() {
-                        modalDiv.classList.toggle("show-modal");
-                    }
-                
-                    function windowOnClick(event) {
-                        if (event.target === modalDiv) {
-                            toggleModal();
-                        }
-                    }
-                    
-                    addPostBtn.addEventListener("click", toggleModal);
-                    modalSpan.addEventListener("click", toggleModal);
-                    window.addEventListener("click", windowOnClick);
-                }
-            })
+            logincheck()
+            allUsers.forEach(user => renderUserList(user, userList))
         })
+        
+        
+        // here to 41 can probably be the foreach and the if statement
     }
+    
+    const logincheck = () =>{
+        allUsers.forEach(user => {
+            if(user.username === loginTextField.value){
+                currentUser = user.id
+                removeUserListChildren(userList)
+                fetchFeed()
 
+                const logo = document.getElementById("app-name")
+                logo.addEventListener('click', (e) => {
+                    fetchFeed()
+                })
+                // look to line 45 for lines 51 to 106
+                const topBar = document.getElementById('top-info')
+                const addPostBtn = document.createElement('button')
+                addPostBtn.innerText = "Add a Post"
+                addPostBtn.classList += "trigger"
+                
+                topBar.appendChild(addPostBtn)
+                const modalDiv = document.createElement('div')
+                modalDiv.classList += "modal"
+                topBar.appendChild(modalDiv)
+
+                const modalContent = document.createElement('div')
+                modalContent.classList += "modal-content"
+                modalDiv.appendChild(modalContent)
+
+                const modalSpan = document.createElement('span')
+                modalSpan.classList += "close-button"
+                modalSpan.innerHTML = "&times;"
+                modalContent.appendChild(modalSpan)
+
+                const addPostForm = document.createElement('form')
+                modalContent.appendChild(addPostForm)
+
+                const imageUrlInput = document.createElement('input')
+                imageUrlInput.type = 'text'
+                imageUrlInput.placeholder = 'Image URL Here'
+                addPostForm.appendChild(imageUrlInput)
+
+                const captionInput = document.createElement('input')
+                captionInput.type = 'textField'
+                captionInput.placeholder = "Write a Caption"
+                addPostForm.appendChild(captionInput)
+
+                const submitPostBtn = document.createElement('input')
+                submitPostBtn.type = 'submit'
+                submitPostBtn.innerText = "Post"
+                addPostForm.appendChild(submitPostBtn)
+
+                addPostForm.addEventListener('submit', (e) => {
+                    e.preventDefault()
+                    postAPost(user, imageUrlInput, captionInput)
+                
+                })
+
+                function toggleModal() {
+                    modalDiv.classList.toggle("show-modal");
+                }
+            
+                function windowOnClick(event) {
+                    if (event.target === modalDiv) {
+                        toggleModal();
+                    }
+                }
+                
+                addPostBtn.addEventListener("click", toggleModal);
+                modalSpan.addEventListener("click", toggleModal);
+                window.addEventListener("click", windowOnClick);
+            }
+        })
+    }  
     
     const fetchFeed = () => {
         fetch(postUrl)
@@ -110,31 +112,35 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(posts => showFeed(posts))
     }
 
+    
     const showFeed = (posts) => {
+        // lines 122 &123 gets the Show panel then clears it so we have a blank canvas to work with
         const showPanel = document.getElementById('show-panel')
         removeShowPanelChildren(showPanel)
 
+        // creates a div container for us to place our list of feed post then appends it to the show panel.
         const feedDiv = document.createElement('div')
         feedDiv.id = 'feed-div'
         showPanel.appendChild(feedDiv)
 
+        // making each post then adding them to the feed div
         const feedList = document.createElement('list')
         feedList.li = 'all-posts-list'
         feedDiv.appendChild(feedList)
+
 
         posts.forEach(post => showAllPosts(post, showPanel, feedList))
 
         console.log(feedDiv)
         feedDiv.addEventListener("click", (e) => {
-            if(e.target.className === "whatever"){
-                const x = e.target
-                postPage(x)
+            if(e.target.className === "post-img"){
+                const postImg = e.target
+                postPage(postImg)
             }
         })
     }
-    const postPage = (x) => {
-        console.log(x.dataset.id)
-        fetch(`${postUrl}/${x.dataset.id}`)
+    const postPage = (postImg) => {
+        fetch(`${postUrl}/${postImg.dataset.id}`)
         .then(res => res.json())
         .then(post => postShowPage(post))
     }
@@ -186,11 +192,6 @@ document.addEventListener("DOMContentLoaded", () => {
             })
         }
         
-
-
-        
-
-
     }
     const showAllPosts = (post, showPanel, feedList) => {
         const li = document.createElement('li')
@@ -200,15 +201,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const img = document.createElement('img')
         img.src = post.image_url
         img.dataset.id = post.id
-        img.className = "whatever"
+        img.className = "post-img"
         li.appendChild(img)
     }
 
-    // const renderSignUP = (loginTextField) => {
-    //     console.log(loginTextField)
-    // }
-
     const renderUserList = (user, userList) => {
+
 
         const userLi = document.createElement("li")
         userList.appendChild(userLi)
@@ -233,14 +231,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    const sideNavBarDiv = document.getElementById("side-nav-bar")
-
-    // sideNavBarDiv.addEventListener('click', (e) => {
-    //     if(e.target.class = "list-item"){
-            
-    //         console.log(e.target)
-    //     }
-    // })
     const rendersUser = (user) => {
         const showPanel = document.getElementById('show-panel')
         removeShowPanelChildren(showPanel)
@@ -321,7 +311,12 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(res => res.json())
         .then(post => postShowPage(post))
         
-        
+        const updateRenderedList = () => {
+            //step1 make that somehow (make a post)
+            //step2 find the user for the post
+            //step3 compare the all users array vs the user we just found
+            //step4 take the match and update it;s info
+        }
     }
 
 

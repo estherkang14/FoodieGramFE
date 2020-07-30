@@ -223,7 +223,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if(post.comments){
             post.comments.forEach(comment => {
                 console.log(comment)
-                debugger
                 const commentli = document.createElement('li')
                 commentli.innerHTML = ` - ${comment.text} - <span class='btn-danger'> &times </span>`
                 commentli.id = comment.id
@@ -243,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 addCommentButton.innerText = "Hide Comment Form"
                 addCommentButton.id = 'hide-comment-form'
                 const newCommentForm = document.createElement('form')
-                newCommentForm.innerText = "test"
+                
                 newCommentForm.dataset.id = post.id
                 newCommentForm.id = 'new-comment-form'
                 commentDiv.appendChild(newCommentForm)
@@ -353,6 +352,67 @@ document.addEventListener("DOMContentLoaded", () => {
         const userBio = document.createElement("p")
         userBio.textContent = user.bio 
         profileInfoDiv.appendChild(userBio)
+
+        if (user.id === currentUser.id) {
+        const editProfile = document.createElement("button")
+        editProfile.dataset.id = currentUser.id
+        editProfile.id = "edit-profile-button"
+        editProfile.innerText = "Edit Your Profile"
+        profileInfoDiv.appendChild(editProfile)
+        
+        }
+
+        profileInfoDiv.addEventListener('click', (e) => {
+            if (e.target.id === 'edit-profile-button') {
+                let button = e.target 
+                button.innerText = "Close Edit"
+                button.id = 'close-edit-button'
+
+                const editProfileForm = document.createElement('form')
+                editProfileForm.id = 'edit-profile-form'
+                editProfileForm.dataset.id = currentUser.id 
+                profileInfoDiv.appendChild(editProfileForm)
+
+                editProfileForm.innerHTML = `
+                <label>Bio: </label>
+                <input type='text' name='bio'>
+                <br>
+                <label>Profile Picture URL: </label>
+                <input type='text' name='profilepic'>
+                <br>
+                <input type='submit' value='Edit Profile'>
+                `
+                editProfileForm.addEventListener('submit', (e) => {
+                    e.preventDefault()
+                    let editForm = e.target
+                    console.log(editForm)
+                    console.log(editForm.bio.value)
+                    fetch(`${userUrl}/${editForm.dataset.id}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify( {
+                            bio: editForm.bio.value,
+                            profilepic: editForm.profilepic.value
+                        }),
+                        headers: {
+                            'content-type': 'application/json' 
+                            // 'accept': 'application/json'
+                        }
+                        
+                    })
+                    .then(resp => resp.json())
+                    .then(console.log)
+                })
+
+            } else if (e.target.id === 'close-edit-button') {
+                let button = e.target
+                button.innerText = 'Edit Your Profile'
+                button.id = "edit-profile-button"
+                let editProfileFormHide = document.getElementById('edit-profile-form')
+                profileInfoDiv.removeChild(editProfileFormHide)
+            }
+        })
+
+        
 
         const main = document.createElement("main")
         main.id = 'profile-post'

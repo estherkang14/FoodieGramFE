@@ -385,8 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 editProfileForm.addEventListener('submit', (e) => {
                     e.preventDefault()
                     let editForm = e.target
-                    console.log(editForm)
-                    console.log(editForm.bio.value)
+                
                     fetch(`${userUrl}/${editForm.dataset.id}`, {
                         method: 'PATCH',
                         body: JSON.stringify( {

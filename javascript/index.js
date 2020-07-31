@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault()
             logincheck()
             allUsers.forEach(user => renderUserList(user, userList))
+            loginTextField.value = ""
         })
         
         
@@ -95,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 addPostForm.addEventListener('submit', (e) => {
                     e.preventDefault()
                     postAPost(user, imageUrlInput, captionInput)
+                    toggleModal()
                 })
                 
                 function toggleModal() {
@@ -128,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const newUserForm = document.createElement('form')
         newUserForm.id = 'sign-up-form'
+
         formHolder.appendChild(newUserForm)
         
         const newName = document.createElement('input')
@@ -141,6 +144,13 @@ document.addEventListener("DOMContentLoaded", () => {
         newBio.placeholder='Tell us about yourself'
         newBio.id = 'signUp-bio'
         newUserForm.appendChild(newBio)
+
+        const newProfilePic = document.createElement('input')
+        newProfilePic.type='text'
+        newProfilePic.placeholder='Img URL here'
+        newProfilePic.id = 'signUp-Pic'
+        newUserForm.appendChild(newProfilePic)
+
         
         const newSubmit = document.createElement('input')
         newSubmit.type='submit'
@@ -157,14 +167,40 @@ document.addEventListener("DOMContentLoaded", () => {
             mainHolder.classList.toggle("show-modal");
         }
             
-            function windowOnClick(event) {
-                if (event.target === mainHolder) {
-                    toggleModal();
-                }
+        function windowOnClick(event) {
+            if (event.target === mainHolder) {
+                toggleModal();
             }
-            signUpBtn.addEventListener("click", toggleModal);
-            signUpSpan.addEventListener("click", toggleModal);
-            window.addEventListener("click", windowOnClick);
+        }
+        signUpBtn.addEventListener("click", toggleModal);
+        signUpSpan.addEventListener("click", toggleModal);
+        window.addEventListener("click", windowOnClick);
+
+        newUserForm.addEventListener('submit', (e) => {
+            e.preventDefault()
+
+            fetch(userUrl, {
+                method: "POST",
+                body: JSON.stringify({
+                    username: newName.value,
+                    bio: newBio.value,
+                    profilepic: newProfilePic.value
+                }),
+                headers: {
+                    'content-type': 'application/json',
+                    accept: 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(newUser => {
+                allUsers.push(newUser)
+                // currentUser = newUser
+                toggleModal()
+                alert("Your account has been made please log in!")
+                logincheck()
+            })
+            console.log(e.target)
+        })
     }
     signUp()
     

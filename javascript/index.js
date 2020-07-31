@@ -521,6 +521,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const editBioInput = document.createElement('input')
                 editBioInput.type ='text'
+                editBioInput.value = currentUser.bio
                 editProfileForm.appendChild(editBioInput)
                 const brOne = document.createElement('br')
                 editProfileForm.appendChild(brOne)
@@ -531,6 +532,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const editProfilePic = document.createElement('input')
                 editProfilePic.type = 'text'
+                editProfilePic.value = currentUser.profilepic
                 editProfileForm.appendChild(editProfilePic)
 
                 const brTwo = document.createElement('br')
@@ -668,6 +670,8 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(post => {
             user.posts.push(post)
             console.log(user.posts)
+            imageUrlInput.value = "",
+            captionInput.value = "",
             rendersUser(user)
         })
     }

@@ -336,12 +336,25 @@ document.addEventListener("DOMContentLoaded", () => {
         if(post.comments){
             post.comments.forEach(comment => {
                 console.log(comment)
+                if (comment.user_id === currentUser.id) {
                 const commentli = document.createElement('li')
-                commentli.innerHTML = ` - ${comment.text} - <span class='btn-danger'> &times </span>`
+                commentli.innerHTML = ` ${comment.text} - <span class='btn-danger'> &times </span>`
                 commentli.id = comment.id
                 commentList.appendChild(commentli)
+                } else if (post.user_id === currentUser.id) {
+                    const commentli = document.createElement('li')
+                    commentli.innerHTML = ` ${comment.text} - <span class='btn-danger'> &times </span>`
+                    commentli.id = comment.id
+                    commentList.appendChild(commentli)
+                } else {
+                    const commentli = document.createElement('li')
+                    commentli.innerHTML = ` ${comment.text}`
+                    commentli.id = comment.id
+                    commentList.appendChild(commentli)
+                }
             })
         }
+        
         const addCommentButton = document.createElement('button')
         addCommentButton.innerText = "Add a Comment!"
         addCommentButton.id = 'add-comment'

@@ -452,6 +452,9 @@ document.addEventListener("DOMContentLoaded", () => {
         userLi.innerText = user.username
         userLi.dataset.id = user.id
         userLi.className = "list-item"
+
+        const spacing = document.createElement('br')
+        userList.appendChild(spacing)
         userLi.addEventListener('click', (e) => {
             if(e.target.innerText === user.username){
                 rendersUser(user)
@@ -497,8 +500,9 @@ document.addEventListener("DOMContentLoaded", () => {
         editProfile.id = "edit-profile-button"
         editProfile.innerText = "Edit Your Profile"
         profileInfoDiv.appendChild(editProfile)
-        
         }
+        const spacing = document.createElement('br')
+        showPanel.appendChild(spacing)
 
         profileInfoDiv.addEventListener('click', (e) => {
             if (e.target.id === 'edit-profile-button') {

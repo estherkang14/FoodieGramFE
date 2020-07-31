@@ -142,14 +142,21 @@ input[type=submit]:hover {
 }
 
 #show-panel {
-  width: 40%;
+  /* width: 40%; */
   padding-left: 160px;
   padding-top: 160px; 
+  display: flex;
+  justify-content: center;
+  /* margin: 0; */
+}
+
+#profile-info {
+  height: 200px;
 }
 
 #feed-div, #profile-info, #profile-post, #post-show-page {
   color: white;
-  text-align: center;
+  text-align: center; 
   list-style: none;
 }
 
@@ -174,9 +181,14 @@ input[type=submit]:hover {
   border-radius: 50%;
 }
 
-/* img {
-  height: auto; 
-  width: auto; 
-  max-width: 300px; 
-  max-height: 300px;
-} */
+#user-list {
+  background-color: #111;
+}
+
+#user-list li {
+  color: black;
+  border-radius: 0.25rem;
+  background-color: lightgray;
+  text-align: center;
+}
+

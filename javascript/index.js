@@ -484,37 +484,81 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const editProfileForm = document.createElement('form')
                 editProfileForm.id = 'edit-profile-form'
-                editProfileForm.dataset.id = currentUser.id 
+                // editProfileForm.dataset.id = currentUser.id 
                 profileInfoDiv.appendChild(editProfileForm)
 
-                editProfileForm.innerHTML = `
-                <label>Bio: </label>
-                <input type='text' name='bio'>
-                <br>
-                <label>Profile Picture URL: </label>
-                <input type='text' name='profilepic'>
-                <br>
-                <input type='submit' value='Edit Profile'>
-                `
-                editProfileForm.addEventListener('submit', (e) => {
+                const bioLabel = document.createElement('label')
+                bioLabel.innerText = 'Bio: '
+                editProfileForm.appendChild(bioLabel)
+
+                const editBioInput = document.createElement('input')
+                editBioInput.type ='text'
+                editProfileForm.appendChild(editBioInput)
+                const brOne = document.createElement('br')
+                editProfileForm.appendChild(brOne)
+
+                const profilePicLabel = document.createElement('label')
+                profilePicLabel.innerText = 'Profile Picture: '
+                editProfileForm.appendChild(profilePicLabel)
+
+                const editProfilePic = document.createElement('input')
+                editProfilePic.type = 'text'
+                editProfileForm.appendChild(editProfilePic)
+
+                const brTwo = document.createElement('br')
+                editProfileForm.appendChild(brTwo)
+
+                const editSubmit = document.createElement('input')
+                editSubmit.type = 'submit'
+                editSubmit.value = 'finish edit'
+                editProfileForm.appendChild(editSubmit)
+                console.log(editSubmit)
+                editSubmit.addEventListener('submit', (e) => {
                     e.preventDefault()
-                    let editForm = e.target
-                
-                    fetch(`${userUrl}/${editForm.dataset.id}`, {
+                    fetch(`${userUrl}/${currentUser.id}`, {
                         method: 'PATCH',
-                        body: JSON.stringify( {
-                            bio: editForm.bio.value,
-                            profilepic: editForm.profilepic.value
+                        body: JSON.stringify({
+                        bio: editBioInput.value ,
+                        profilepic: editProfilePic.value
                         }),
                         headers: {
-                            'content-type': 'application/json' 
-                            // 'accept': 'application/json'
+                        'Content-type' : 'application/json',
+                        'Accept': 'application/json'
                         }
-                        
                     })
-                    .then(resp => resp.json())
+                    .then(res => res.json())
                     .then(console.log)
                 })
+
+
+                // editProfileForm.innerHTML = `
+                // <label>Bio: </label>
+                // <input type='text' name='bio'>
+                // <br>
+                // <label>Profile Picture URL: </label>
+                // <input type='text' name='profilepic'>
+                // <br>
+                // <input type='submit' value='Edit Profile'>
+                // `
+                // editProfileForm.addEventListener('submit', (e) => {
+                //     e.preventDefault()
+                //     let editForm = e.target
+                
+                //     fetch(`${userUrl}/${currentUser.id}`, {
+                //         method: 'PATCH',
+                //         body: JSON.stringify( {
+                //             bio: editForm.bio.value,
+                //             profilepic: editForm.profilepic.value
+                //         }),
+                //         headers: {
+                //             'Accept': 'application/json',
+                //             'Content-Type': 'application/json'
+                //         }
+                        
+                //     })
+                //     .then(resp => resp.json())
+                //     .then(console.log)
+                // })
 
             } else if (e.target.id === 'close-edit-button') {
                 let button = e.target
@@ -522,6 +566,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 button.id = "edit-profile-button"
                 let editProfileFormHide = document.getElementById('edit-profile-form')
                 profileInfoDiv.removeChild(editProfileFormHide)
+                console.log('star')
             }
         })
 

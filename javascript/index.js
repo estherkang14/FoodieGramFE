@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             })
         }
-        
+
         const addCommentButton = document.createElement('button')
         addCommentButton.innerText = "Add a Comment!"
         addCommentButton.id = 'add-comment'
@@ -473,7 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const userProfilePic = document.createElement("img")
         userProfilePic.src = user.profilepic 
-        userProfilePic.class = "profile-pic"
+        userProfilePic.className = "profile-pic"
         profileInfoDiv.appendChild(userProfilePic)
 
         const userBio = document.createElement("p")

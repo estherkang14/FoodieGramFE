@@ -308,6 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const caption = document.createElement('p')
         caption.textContent = post.caption
+        caption.class = 'post-caption'
         div.appendChild(caption)
 
         const commentDiv = document.createElement('div')
@@ -534,6 +535,7 @@ document.addEventListener("DOMContentLoaded", () => {
         postDiv.classList += 'card'
         const image = document.createElement('img')
         image.src = post.image_url
+        image.class = 'post-img'
         image.dataset.id = post.id
         postDiv.appendChild(image)
         

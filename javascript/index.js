@@ -195,9 +195,10 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(newUser => {
                 allUsers.push(newUser)
                 // currentUser = newUser
+                console.log("something")
                 toggleModal()
                 alert("Your account has been made please log in!")
-                logincheck()
+                window.location.reload()
             })
             console.log(e.target)
         })

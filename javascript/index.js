@@ -59,8 +59,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const addPostBtn = document.createElement('button')
                 addPostBtn.innerText = "Add a Post"
                 addPostBtn.classList += "trigger"
-                
+                addPostBtn.classList += "top-linksli"
                 topBar.appendChild(addPostBtn)
+
                 const modalDiv = document.createElement('div')
                 modalDiv.classList += "modal"
                 topBar.appendChild(modalDiv)
@@ -205,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }),
                 headers: {
                     'content-type': 'application/json',
-                    accept: 'application/json'
+                    Accept: 'application/json'
                 }
             })
             .then(res => res.json())
@@ -271,6 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showPanel.appendChild(div)
 
         const img = document.createElement('img')
+        img.className = 'post-img'
         img.src= post.image_url
         div.appendChild(img)
 
@@ -612,7 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
         postDiv.classList += 'card'
         const image = document.createElement('img')
         image.src = post.image_url
-        image.class = 'post-img'
+        image.className = 'post-img'
         image.dataset.id = post.id
         postDiv.appendChild(image)
         

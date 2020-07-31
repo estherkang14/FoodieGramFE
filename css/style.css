@@ -41,9 +41,44 @@ header {
 }
 
 .top-info li {
-  display: inline-block;
+  display: inline;
   padding: 0px 20px;
 }
+
+.top-linksli {
+  transition: all 0.3s ease 0s;
+  align-self: start;
+}
+
+.top-linksli :hover{
+color: #0088a9;
+}
+
+button{
+  padding: 9px 25px;
+  background-color: rgba(0,136,169,1);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease 0s;
+}
+
+button:hover {
+  background-color: rgba(0,136,169,0.8);
+} 
+
+input[type=submit] {
+  padding: 9px 25px;
+  background-color: rgba(0,136,169,1);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease 0s;
+}
+
+input[type=submit]:hover {
+  background-color: rgba(0,136,169,0.8);
+} 
 
 .modal {
   position: fixed;
@@ -138,3 +173,10 @@ header {
   max-height: 200px;
   border-radius: 50%;
 }
+
+/* img {
+  height: auto; 
+  width: auto; 
+  max-width: 300px; 
+  max-height: 300px;
+} */

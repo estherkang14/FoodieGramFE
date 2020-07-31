@@ -540,8 +540,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 editSubmit.type = 'submit'
                 editSubmit.value = 'finish edit'
                 editProfileForm.appendChild(editSubmit)
+
                 console.log(editSubmit)
-                editSubmit.addEventListener('submit', (e) => {
+                editProfileForm.addEventListener('submit', (e) => {
                     e.preventDefault()
                     fetch(`${userUrl}/${currentUser.id}`, {
                         method: 'PATCH',
@@ -555,7 +556,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     })
                     .then(res => res.json())
-                    .then(console.log)
+                    .then(user => {
+                        currentUser = user
+                        rendersUser(currentUser)
+
+                    })
                 })
 
 
@@ -606,6 +611,7 @@ document.addEventListener("DOMContentLoaded", () => {
         removeAllPosts(main)
 
         const usersPosts = user.posts 
+        console.log(user.posts)
         renderPosts(usersPosts, main, user)
 
         main.addEventListener("click", (e) => {

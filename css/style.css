@@ -146,13 +146,16 @@ input[type=submit]:hover {
   padding-left: 160px;
   padding-top: 160px; 
   display: flex;
+  flex-flow: column nowrap;
   justify-content: center;
+  align-items: center;
+
   /* margin: 0; */
 }
 
-#profile-info {
+/* #profile-info {
   height: 200px;
-}
+} */
 
 #feed-div, #profile-info, #profile-post, #post-show-page {
   color: white;

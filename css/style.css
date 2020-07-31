@@ -15,6 +15,12 @@ h3, li, #btn{
   text-decoration: none;
 }
 
+h1 {
+  font-family: Arial, sans-serif;
+  font-weight: 500;
+  color: #edf0f1;
+}
+
 header {
   display: flex;
   
@@ -123,4 +129,12 @@ header {
   width: auto; 
   max-width: 300px; 
   max-height: 300px;
+}
+
+.profile-pic {
+  height: auto;
+  width: auto;
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 50%;
 }

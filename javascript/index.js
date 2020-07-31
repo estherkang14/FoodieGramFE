@@ -112,6 +112,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 addPostBtn.addEventListener("click", toggleModal);
                 modalSpan.addEventListener("click", toggleModal);
                 window.addEventListener("click", windowOnClick);
+
+                if (currentUser !== null || undefined) {
+                    let loginForm = document.getElementById('login-form')
+                    let signUp = document.getElementById('sign-up')
+                    loginForm.remove()
+                    signUp.remove()
+                    const logOut = document.createElement('button')
+                    logOut.innerText = 'Log Out'
+                    logOut.id = 'log-out'
+                    topBar.appendChild(logOut)
+                    console.log("Hello!")
+
+                    logOut.addEventListener('click', () => { 
+                        alert("You are now logged out! Goodbye!")
+                        window.location.reload()
+                    })
+                }
             } 
         })
     }  
@@ -437,12 +454,13 @@ document.addEventListener("DOMContentLoaded", () => {
         profileInfoDiv.id = 'profile-info'
         showPanel.appendChild(profileInfoDiv)
         
-        const userName = document.createElement("h3")
+        const userName = document.createElement("h1")
         userName.innerText = user.username
         profileInfoDiv.appendChild(userName)
 
         const userProfilePic = document.createElement("img")
         userProfilePic.src = user.profilepic 
+        userProfilePic.class = "profile-pic"
         profileInfoDiv.appendChild(userProfilePic)
 
         const userBio = document.createElement("p")

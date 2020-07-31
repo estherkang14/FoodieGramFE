@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         userLoginForm.addEventListener('submit', (e) => {
             e.preventDefault()
             logincheck()
+            
             allUsers.forEach(user => renderUserList(user, userList))
             loginTextField.value = ""
         })
@@ -44,13 +45,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 currentUser = user
                 removeUserListChildren(userList)
                 fetchFeed()
-
+                
                 const logo = document.getElementById("app-name")
                 logo.addEventListener('click', (e) => {
                     fetchFeed()
                 })
+
+                const topInfo = document.getElementById('top-info')
+                const profileButton = document.createElement('button')
+                profileButton.id = 'profile-button'
+                profileButton.innerText = "My Profile"
+                topInfo.appendChild(profileButton)
                 
-                const profileButton = document.getElementById("profile-button")
                 profileButton.addEventListener('click', (e) => {
                     rendersUser(currentUser)
                 })
@@ -196,29 +202,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
         newUserForm.addEventListener('submit', (e) => {
             e.preventDefault()
-
-            fetch(userUrl, {
-                method: "POST",
-                body: JSON.stringify({
-                    username: newName.value,
-                    bio: newBio.value,
-                    profilepic: newProfilePic.value
-                }),
-                headers: {
-                    'content-type': 'application/json',
-                    Accept: 'application/json'
-                }
-            })
-            .then(res => res.json())
-            .then(newUser => {
-                allUsers.push(newUser)
-                // currentUser = newUser
-                console.log("something")
-                toggleModal()
-                alert("Your account has been made please log in!")
-                window.location.reload()
-            })
-            console.log(e.target)
+            if(allUsersUserName.includes(newName.value)){
+                alert("That name is taken try again")
+            }else{
+                fetch(userUrl, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        username: newName.value,
+                        bio: newBio.value,
+                        profilepic: newProfilePic.value
+                    }),
+                    headers: {
+                        'content-type': 'application/json',
+                        Accept: 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .then(newUser => {
+                    allUsers.push(newUser)
+                    // currentUser = newUser
+                    console.log("something")
+                    toggleModal()
+                    alert("Your account has been made please log in!")
+                    window.location.reload()
+                })
+            }
+            // console.log(e.target)
         })
     }
     signUp()
